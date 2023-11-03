@@ -1,6 +1,6 @@
 {
   "name": "@httpz/router-fs",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -25,8 +25,8 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@httpz/core": "^0.1.4",
-    "@httpz/router": "^0.1.4",
+    "@httpz/core": ">= 0.1.0 < 0.2.0",
+    "@httpz/router": ">= 0.1.0 < 0.2.0",
     "zod": "^3.22.4"
   },
   "scripts": {
