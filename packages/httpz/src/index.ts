@@ -9,38 +9,14 @@ export type * from './interface'
 export * from './parsers'
 
 export class HTTPz {
-  private _server: Server
-  private _middlewares: Middleware[]
+  private readonly server: Server
+  private readonly middlewares: Middleware[]
 
   constructor() {
-    this._server = createServer()
-    this._middlewares = [querystringParser(), bodyParser()]
-  }
-
-  get server(): Server {
-    return this._server
-  }
-
-  /**
-   * Use a middleware
-   * @param {Middleware} middleware
-   * @returns {HTTPz}
-   */
-  use(middleware: Middleware): HTTPz {
-    return this._middlewares.push(middleware), this
-  }
-
-  /**
-   * Start a server listening for connections
-   * @param {number} port
-   * @param {string} hostname
-   * @param {Function} cb
-   */
-  listen(port: number, hostname: string, cb?: () => void): void {
-    this._server.on('request', async (req: Request, res: Response) => {
+    this.server = createServer(async (req, res) => {
       try {
-        for (const middleware of this._middlewares) {
-          const result = await middleware(req, res)
+        for (const middleware of this.middlewares) {
+          const result = await middleware(req as Request, res as Response)
 
           if (result instanceof HTTPResponse) {
             return await result.callback(res)
@@ -59,6 +35,26 @@ export class HTTPz {
       }
     })
 
-    this._server.listen(port, hostname, cb)
+    this.middlewares = [querystringParser(), bodyParser()]
+  }
+
+  /**
+   * Use a middleware
+   * @param {Middleware} middleware
+   * @returns {HTTPz}
+   */
+  use(middleware: Middleware): HTTPz {
+    return this.middlewares.push(middleware), this
+  }
+
+  /**
+   * Start a server listening for connections
+   * @param {number} port
+   * @param {string} hostname
+   * @param {Function} cb
+   * @returns {Server}
+   */
+  listen(port: number, hostname: string, cb?: () => void): Server {
+    return this.server.listen(port, hostname, cb)
   }
 }
