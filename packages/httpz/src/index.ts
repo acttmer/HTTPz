@@ -9,8 +9,8 @@ export type * from './interface'
 export * from './parsers'
 
 export class HTTPz {
-  private readonly server: Server
-  private readonly middlewares: Middleware[]
+  public server: Server
+  public middlewares: Middleware[]
 
   constructor() {
     this.server = createServer(async (req, res) => {
